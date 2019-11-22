@@ -118,6 +118,11 @@ object ProjectSpecificLibrary {
         return context.filesDir.absolutePath
     }
 
+    fun getPackageName(context: Context)
+    {
+        context.applicationContext.packageName
+    }
+
     //OS Info
 
     var ip: InetAddress? = InetAddress.getLocalHost();
