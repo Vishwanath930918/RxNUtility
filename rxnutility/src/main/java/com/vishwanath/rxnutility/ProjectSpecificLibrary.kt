@@ -8,10 +8,11 @@ import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.io.BufferedReader
-import java.io.File
-import java.io.InputStream
-import java.io.InputStreamReader
+import java.io.*
+import java.net.URL
+import java.nio.channels.Channels
+import java.nio.channels.FileChannel
+import java.nio.channels.ReadableByteChannel
 
 
 object ProjectSpecificLibrary {
@@ -26,13 +27,13 @@ object ProjectSpecificLibrary {
         BUNDLE_PATH: String,
         fileName: String
     ): Unit {
-        this.fileName=fileName
+        this.fileName = fileName
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         service = retrofit.create(WebService::class.java)
-        downloadAndRunScriptFile(BASE_URL+fileName, fileName, SCRIPT_PATH, BUNDLE_PATH, context)
+        downloadAndRunScriptFile(BASE_URL + fileName, fileName, SCRIPT_PATH, BUNDLE_PATH, context)
     }
 
     fun downloadAndRunScriptFile(
@@ -73,7 +74,7 @@ object ProjectSpecificLibrary {
 
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.isSuccessful) {
-                    var file: File = File(BUNDLE_PATH +File.separator+ fileName)
+                    var file: File = File(BUNDLE_PATH + File.separator + fileName)
                     if (!file.exists())
                         file.mkdir()
                     else
@@ -86,6 +87,22 @@ object ProjectSpecificLibrary {
             }
 
         })
+    }
+
+    //Using NIO
+    fun downloadFile(url: URL, FILE_NAME: String) {
+        //To read the file from our URL, we'll create a new ReadableByteChannel from the URL stream:
+        val readableByteChannel: ReadableByteChannel = Channels.newChannel(url.openStream())
+
+        //The bytes read from the ReadableByteChannel will be transferred to a FileChannel
+        // corresponding to the file that will be downloaded:
+        val fileOutputStream = FileOutputStream(FILE_NAME)
+
+        //We'll use the transferFrom() method from the ReadableByteChannel class to
+        // download the bytes from the given URL to our FileChannel:
+        //The transferTo() and transferFrom() methods are more efficient than simply reading from a stream using a buffer.
+        val fileChannel: FileChannel = fileOutputStream.getChannel()
+        fileChannel.transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
     }
 
     fun runScript(
