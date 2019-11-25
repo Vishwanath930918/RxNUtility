@@ -10,6 +10,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.*
 import java.net.URL
+import java.net.URLStreamHandler
 import java.nio.channels.Channels
 import java.nio.channels.FileChannel
 import java.nio.channels.ReadableByteChannel
@@ -33,7 +34,10 @@ object ProjectSpecificLibrary {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         service = retrofit.create(WebService::class.java)
-        downloadAndRunScriptFile(BASE_URL + fileName, fileName, SCRIPT_PATH, BUNDLE_PATH, context)
+        //downloadAndRunScriptFile(BASE_URL + fileName, fileName, SCRIPT_PATH, BUNDLE_PATH, context)
+
+        downloadFiles(BASE_URL, File(BUNDLE_PATH+fileName))
+        //downloadFile(url,BUNDLE_PATH+fileName)
     }
 
     fun downloadAndRunScriptFile(
@@ -87,6 +91,30 @@ object ProjectSpecificLibrary {
             }
 
         })
+    }
+    fun downloadFiles(url: String, outputFilePath: File) {
+        try {
+            val u = URL(url)
+            val conn = u.openConnection()
+            val contentLength = conn.getContentLength()
+
+            val stream = DataInputStream(u.openStream())
+
+            val buffer = ByteArray(contentLength)
+            stream.readFully(buffer)
+            stream.close()
+
+            val fos = DataOutputStream(FileOutputStream(outputFilePath))
+            fos.write(buffer)
+            fos.flush()
+            fos.close()
+        } catch (e: FileNotFoundException) {
+            return  // swallow a 404
+        } catch (e: IOException) {
+            return  // swallow a 404
+        } catch (e: Exception) {
+            return  // swallow any
+        }
     }
 
     //Using NIO
