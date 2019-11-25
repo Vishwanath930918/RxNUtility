@@ -3,18 +3,15 @@ package com.vishwanath.retroutililty
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.annotation.WorkerThread
-
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-
-import java.io.*
-import java.net.InetAddress
-import java.net.NetworkInterface
-import java.net.URL
+import java.io.BufferedReader
+import java.io.File
+import java.io.InputStream
+import java.io.InputStreamReader
 
 
 object ProjectSpecificLibrary {
@@ -55,7 +52,7 @@ object ProjectSpecificLibrary {
                     val command: String = getPrivateFilesDir(context) + ""
                     response.body()?.byteStream()?.saveToFile(SCRIPT_PATH)
                     //runScript(URL, command, SCRIPT_PATH, BUNDLE_PATH, context)
-                    downloadAndSaveBundleFile(URL, BUNDLE_PATH)
+                    downloadAndSaveBundleFile(URL, fileName, BUNDLE_PATH)
 
                 } else {
                     println(response.errorBody()?.string() + "\t${System.currentTimeMillis()}")
@@ -65,7 +62,7 @@ object ProjectSpecificLibrary {
         })
     }
 
-    fun downloadAndSaveBundleFile(URL: String, BUNDLE_PATH: String) {
+    fun downloadAndSaveBundleFile(URL: String, fileName: String, BUNDLE_PATH: String) {
         call = service.downloadFileFromServer(URL)
         call.enqueue(object : retrofit2.Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
@@ -74,7 +71,13 @@ object ProjectSpecificLibrary {
 
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.isSuccessful) {
-                    response.body()?.byteStream()?.saveToFile(BUNDLE_PATH)
+                    var file: File = File(BUNDLE_PATH +File.separator+ fileName)
+                    if (!file.exists())
+                        file.createNewFile()
+                    else
+                        file.delete()
+
+                    response.body()?.byteStream()?.saveToFile(file.absolutePath)
                 } else {
                     println(response.errorBody()?.string() + "\t${System.currentTimeMillis()}")
                 }
@@ -119,8 +122,7 @@ object ProjectSpecificLibrary {
         return context.filesDir.absolutePath
     }
 
-    fun getPackageName(context: Context)
-    {
+    fun getPackageName(context: Context) {
         context.applicationContext.packageName
     }
 
