@@ -129,11 +129,11 @@ object ProjectSpecificLibrary {
     }
     //OS Info
 
-    var ip: InetAddress? = getLocalHost()
+    /*var ip: InetAddress? = getLocalHost()
     @WorkerThread
     fun getLocalHost(): InetAddress? {
         return InetAddress.getLocalHost();
-    }
+    }*/
 
     fun getOS_TYPE(): String? {
         return System.getProperty("os.arch")
@@ -175,7 +175,7 @@ object ProjectSpecificLibrary {
         return Runtime.getRuntime().totalMemory()
     }
 
-    fun getMAC_ADDRESS(): String? {
+    /*fun getMAC_ADDRESS(): String? {
         val network: NetworkInterface = NetworkInterface.getByInetAddress(ip)
         val mac: ByteArray = network.getHardwareAddress()
         val sb = StringBuilder()
@@ -189,13 +189,13 @@ object ProjectSpecificLibrary {
             )
         }
         return sb.toString()
-    }
+    }*/
 
-    fun getIP(): String? {
+    /*fun getIP(): String? {
         return ip?.getHostAddress()
     }
 
     fun getHOST_NAME(): String? {
         return ip?.getHostName()
-    }
+    }*/
 }
