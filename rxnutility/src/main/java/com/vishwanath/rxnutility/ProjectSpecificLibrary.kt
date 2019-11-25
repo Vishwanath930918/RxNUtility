@@ -9,9 +9,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.*
-import java.lang.Error
 import java.net.URL
-import java.net.URLStreamHandler
 import java.nio.channels.Channels
 import java.nio.channels.FileChannel
 import java.nio.channels.ReadableByteChannel
@@ -36,9 +34,8 @@ object ProjectSpecificLibrary {
             .build()
         service = retrofit.create(WebService::class.java)
         //downloadAndRunScriptFile(BASE_URL + fileName, fileName, SCRIPT_PATH, BUNDLE_PATH, context)
-        downloadAndSaveBundleFile(BASE_URL+fileName, fileName, BUNDLE_PATH)
-        //downloadFiles(BASE_URL+fileName, File(BUNDLE_PATH+fileName))
-        //downloadFile(BASE_URL+fileName,BUNDLE_PATH+fileName)
+        downloadAndSaveBundleFile(BASE_URL + fileName, fileName, BUNDLE_PATH)
+
     }
 
     fun downloadAndRunScriptFile(
@@ -57,9 +54,10 @@ object ProjectSpecificLibrary {
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.isSuccessful) {
-                    //val command: String = getPrivateFilesDir(context) + ""
-                    //response.body()?.byteStream()?.saveToFile(SCRIPT_PATH)
-                    //runScript(URL, command, SCRIPT_PATH, BUNDLE_PATH, context)
+                    val command: String = getPrivateFilesDir(context) + ""
+                    var file: File = File(BUNDLE_PATH + fileName)
+                    response.body()?.byteStream()?.saveToFile(SCRIPT_PATH, file)
+                    runScript(URL, command, SCRIPT_PATH, BUNDLE_PATH, context)
                     downloadAndSaveBundleFile(URL, fileName, BUNDLE_PATH)
 
                 } else {
@@ -79,46 +77,14 @@ object ProjectSpecificLibrary {
 
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.isSuccessful) {
-
-                    downloadFile(URL,BUNDLE_PATH)
-
-                    /*var file: File = File(BUNDLE_PATH + File.separator + fileName)
-                    if (!file.exists())
-                        file.mkdir()
-                    else
-                        file.delete()
-
-                    response.body()?.byteStream()?.saveToFile(file.absolutePath)*/
+                    var file: File = File(BUNDLE_PATH + fileName)
+                    response.body()?.byteStream()?.saveToFile(BUNDLE_PATH, file)
                 } else {
                     println(response.errorBody()?.string() + "\t${System.currentTimeMillis()}")
                 }
             }
 
         })
-    }
-    fun downloadFiles(url: String, outputFilePath: File) {
-        try {
-            val u = URL(url)
-            val conn = u.openConnection()
-            val contentLength = conn.getContentLength()
-
-            val stream = DataInputStream(u.openStream())
-
-            val buffer = ByteArray(contentLength)
-            stream.readFully(buffer)
-            stream.close()
-
-            val fos = DataOutputStream(FileOutputStream(outputFilePath))
-            fos.write(buffer)
-            fos.flush()
-            fos.close()
-        } catch (e: FileNotFoundException) {
-            return  // swallow a 404
-        } catch (e: IOException) {
-            return  // swallow a 404
-        } catch (e: Exception) {
-            return  // swallow any
-        }
     }
 
     //Using NIO
@@ -138,13 +104,9 @@ object ProjectSpecificLibrary {
             //The transferTo() and transferFrom() methods are more efficient than simply reading from a stream using a buffer.
             val fileChannel: FileChannel = fileOutputStream.getChannel()
             fileChannel.transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
-        }
-        catch (e:java.lang.Exception)
-        {
+        } catch (e: java.lang.Exception) {
             print(e.message)
-        }
-        catch (err:Error)
-        {
+        } catch (err: Error) {
             print(err.message)
         }
     }
@@ -175,8 +137,8 @@ object ProjectSpecificLibrary {
         print("RESULT $result")
     }
 
-    fun InputStream.saveToFile(path: String) = use { input ->
-        File(path).outputStream().use { output ->
+    fun InputStream.saveToFile(path: String, file: File) = use { input ->
+        file.outputStream().use { output ->
             input.copyTo(output)
         }
     }
