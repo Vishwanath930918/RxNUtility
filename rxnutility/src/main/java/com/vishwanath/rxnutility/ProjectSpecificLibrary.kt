@@ -125,7 +125,16 @@ object ProjectSpecificLibrary {
 
     //OS Info
 
-    var ip: InetAddress? = InetAddress.getLocalHost();
+
+    fun getOS_TYPE(): String? {
+        return System.getProperty("os.arch")
+    }
+
+    fun getOS_VERSION(): String? {
+        return System.getProperty("os.version")
+    }
+
+    /*var ip: InetAddress? = InetAddress.getLocalHost();
     fun getOS_NAME(): String? {
         return System.getProperty("os.name")
     }
@@ -192,5 +201,5 @@ object ProjectSpecificLibrary {
 
     fun getHOST_NAME(): String? {
         return ip?.getHostName()
-    }
+    }*/
 }
