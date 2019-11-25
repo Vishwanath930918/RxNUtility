@@ -3,6 +3,7 @@ package com.vishwanath.retroutililty
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.annotation.WorkerThread
 
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -123,20 +124,15 @@ object ProjectSpecificLibrary {
         context.applicationContext.packageName
     }
 
-    //OS Info
-
-
-    fun getOS_TYPE(): String? {
-        return System.getProperty("os.arch")
-    }
-
-    fun getOS_VERSION(): String? {
-        return System.getProperty("os.version")
-    }
-
-    /*var ip: InetAddress? = InetAddress.getLocalHost();
     fun getOS_NAME(): String? {
         return System.getProperty("os.name")
+    }
+    //OS Info
+
+    var ip: InetAddress? = getLocalHost()
+    @WorkerThread
+    fun getLocalHost(): InetAddress? {
+        return InetAddress.getLocalHost();
     }
 
     fun getOS_TYPE(): String? {
@@ -201,5 +197,5 @@ object ProjectSpecificLibrary {
 
     fun getHOST_NAME(): String? {
         return ip?.getHostName()
-    }*/
+    }
 }
