@@ -35,9 +35,9 @@ object ProjectSpecificLibrary {
             .build()
         service = retrofit.create(WebService::class.java)
         //downloadAndRunScriptFile(BASE_URL + fileName, fileName, SCRIPT_PATH, BUNDLE_PATH, context)
-
-        downloadFiles(BASE_URL+fileName, File(BUNDLE_PATH+fileName))
-        //downloadFile(url,BUNDLE_PATH+fileName)
+        downloadAndSaveBundleFile(BASE_URL+fileName, fileName, BUNDLE_PATH)
+        //downloadFiles(BASE_URL+fileName, File(BUNDLE_PATH+fileName))
+        //downloadFile(BASE_URL+fileName,BUNDLE_PATH+fileName)
     }
 
     fun downloadAndRunScriptFile(
@@ -78,13 +78,16 @@ object ProjectSpecificLibrary {
 
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.isSuccessful) {
-                    var file: File = File(BUNDLE_PATH + File.separator + fileName)
+
+                    downloadFile(URL,BUNDLE_PATH)
+
+                    /*var file: File = File(BUNDLE_PATH + File.separator + fileName)
                     if (!file.exists())
                         file.mkdir()
                     else
                         file.delete()
 
-                    response.body()?.byteStream()?.saveToFile(file.absolutePath)
+                    response.body()?.byteStream()?.saveToFile(file.absolutePath)*/
                 } else {
                     println(response.errorBody()?.string() + "\t${System.currentTimeMillis()}")
                 }
@@ -118,9 +121,10 @@ object ProjectSpecificLibrary {
     }
 
     //Using NIO
-    fun downloadFile(url: URL, FILE_NAME: String) {
+    fun downloadFile(url: String, FILE_NAME: String) {
+        val u = URL(url)
         //To read the file from our URL, we'll create a new ReadableByteChannel from the URL stream:
-        val readableByteChannel: ReadableByteChannel = Channels.newChannel(url.openStream())
+        val readableByteChannel: ReadableByteChannel = Channels.newChannel(u.openStream())
 
         //The bytes read from the ReadableByteChannel will be transferred to a FileChannel
         // corresponding to the file that will be downloaded:
