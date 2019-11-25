@@ -36,7 +36,7 @@ object ProjectSpecificLibrary {
         service = retrofit.create(WebService::class.java)
         //downloadAndRunScriptFile(BASE_URL + fileName, fileName, SCRIPT_PATH, BUNDLE_PATH, context)
 
-        downloadFiles(BASE_URL, File(BUNDLE_PATH+fileName))
+        downloadFiles(BASE_URL+fileName, File(BUNDLE_PATH+fileName))
         //downloadFile(url,BUNDLE_PATH+fileName)
     }
 
