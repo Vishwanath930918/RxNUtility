@@ -9,6 +9,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.*
+import java.lang.Error
 import java.net.URL
 import java.net.URLStreamHandler
 import java.nio.channels.Channels
@@ -122,19 +123,30 @@ object ProjectSpecificLibrary {
 
     //Using NIO
     fun downloadFile(url: String, FILE_NAME: String) {
-        val u = URL(url)
-        //To read the file from our URL, we'll create a new ReadableByteChannel from the URL stream:
-        val readableByteChannel: ReadableByteChannel = Channels.newChannel(u.openStream())
 
-        //The bytes read from the ReadableByteChannel will be transferred to a FileChannel
-        // corresponding to the file that will be downloaded:
-        val fileOutputStream = FileOutputStream(FILE_NAME)
+        try {
+            val u = URL(url)
+            //To read the file from our URL, we'll create a new ReadableByteChannel from the URL stream:
+            val readableByteChannel: ReadableByteChannel = Channels.newChannel(u.openStream())
 
-        //We'll use the transferFrom() method from the ReadableByteChannel class to
-        // download the bytes from the given URL to our FileChannel:
-        //The transferTo() and transferFrom() methods are more efficient than simply reading from a stream using a buffer.
-        val fileChannel: FileChannel = fileOutputStream.getChannel()
-        fileChannel.transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
+            //The bytes read from the ReadableByteChannel will be transferred to a FileChannel
+            // corresponding to the file that will be downloaded:
+            val fileOutputStream = FileOutputStream(FILE_NAME)
+
+            //We'll use the transferFrom() method from the ReadableByteChannel class to
+            // download the bytes from the given URL to our FileChannel:
+            //The transferTo() and transferFrom() methods are more efficient than simply reading from a stream using a buffer.
+            val fileChannel: FileChannel = fileOutputStream.getChannel()
+            fileChannel.transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
+        }
+        catch (e:java.lang.Exception)
+        {
+            print(e.message)
+        }
+        catch (err:Error)
+        {
+            print(err.message)
+        }
     }
 
     fun runScript(
