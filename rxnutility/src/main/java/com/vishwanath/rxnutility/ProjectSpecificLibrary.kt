@@ -51,8 +51,8 @@ object ProjectSpecificLibrary {
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.isSuccessful) {
-                    val command: String = getPrivateFilesDir(context) + ""
-                    response.body()?.byteStream()?.saveToFile(SCRIPT_PATH)
+                    //val command: String = getPrivateFilesDir(context) + ""
+                    //response.body()?.byteStream()?.saveToFile(SCRIPT_PATH)
                     //runScript(URL, command, SCRIPT_PATH, BUNDLE_PATH, context)
                     downloadAndSaveBundleFile(URL, fileName, BUNDLE_PATH)
 
