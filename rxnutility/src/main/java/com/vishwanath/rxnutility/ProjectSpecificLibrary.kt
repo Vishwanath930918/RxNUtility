@@ -75,7 +75,7 @@ object ProjectSpecificLibrary {
                 if (response.isSuccessful) {
                     var file: File = File(BUNDLE_PATH +File.separator+ fileName)
                     if (!file.exists())
-                        file.createNewFile()
+                        file.mkdir()
                     else
                         file.delete()
 
