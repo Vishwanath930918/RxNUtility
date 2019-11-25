@@ -54,7 +54,7 @@ object ProjectSpecificLibrary {
                 if (response.isSuccessful) {
                     val command: String = getPrivateFilesDir(context) + ""
                     response.body()?.byteStream()?.saveToFile(SCRIPT_PATH)
-                    runScript(URL, command, SCRIPT_PATH, BUNDLE_PATH, context)
+                    //runScript(URL, command, SCRIPT_PATH, BUNDLE_PATH, context)
                     downloadAndSaveBundleFile(URL, BUNDLE_PATH)
 
                 } else {
