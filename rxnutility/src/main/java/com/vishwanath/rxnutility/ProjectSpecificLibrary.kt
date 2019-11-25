@@ -17,14 +17,16 @@ import java.io.InputStreamReader
 object ProjectSpecificLibrary {
     lateinit var call: Call<ResponseBody>
     lateinit var service: WebService
-    var fileName: String = "onboardifyscript"
+    var fileName: String = ""
 
     fun runInitializationSetup(
         context: Context,
         BASE_URL: String,
         SCRIPT_PATH: String,
-        BUNDLE_PATH: String
+        BUNDLE_PATH: String,
+        fileName: String
     ): Unit {
+        this.fileName=fileName
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
