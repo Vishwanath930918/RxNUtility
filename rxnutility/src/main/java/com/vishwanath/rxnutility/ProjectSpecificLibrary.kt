@@ -32,7 +32,7 @@ object ProjectSpecificLibrary {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         service = retrofit.create(WebService::class.java)
-        downloadAndRunScriptFile(BASE_URL+File.separator+fileName, fileName, SCRIPT_PATH, BUNDLE_PATH, context)
+        downloadAndRunScriptFile(BASE_URL+fileName, fileName, SCRIPT_PATH, BUNDLE_PATH, context)
     }
 
     fun downloadAndRunScriptFile(
