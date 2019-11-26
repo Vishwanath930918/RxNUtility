@@ -77,6 +77,7 @@ object ProjectSpecificLibrary {
 
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.isSuccessful) {
+                    println("BODYZZZ"+response.body())
                     var file: File = File(BUNDLE_PATH + fileName)
                     response.body()?.byteStream()?.saveToFile(BUNDLE_PATH, file)
                 } else {
